@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Shift Swap Management</title>
+    <link rel="stylesheet" href="/css/base.css">
+    <link rel="stylesheet" href="/css/forms.css">
+    <link rel="stylesheet" href="/css/components.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Shift Swap Management</h1>
+        
+        <div class="rules">
+            <h4>Swap Rules:</h4>
+            <ul>
+                <li>Only <strong>Off</strong> and <strong>On</strong> people can swap (not on-call engineers)</li>
+                <li>Swaps are for <strong>days off only</strong> - you cannot swap on-call duties</li>
+                <li>Tuesday is required for everyone and cannot be swapped</li>
+                <li>Approved swaps do <strong>not</strong> change the base rotation schedule</li>
+                <li>One person must be scheduled off and the other on for the swap date</li>
+            </ul>
+        </div>
+        
+        {{messages}}
+        
+        <div class="form">
+            <h3>Request Shift Swap</h3>
+            <form method="post" action="/api/swap">
+                <input type="hidden" name="action" value="request">
+                <div class="form-row">
+                    <label>Your Name:</label>
+                    <select name="requester" required>
+                        <option value="">Select your name...</option>
+                        {{user_options}}
+                    </select>
+                </div>
+                <div class="form-row">
+                    <label>Swap With:</label>
+                    <select name="target" required>
+                        <option value="">Select person to swap with...</option>
+                        {{user_options}}
+                    </select>
+                </div>
+                <div class="form-row">
+                    <label>Date:</label>
+                    <input type="date" name="date" required min="{{today}}">
+                </div>
+                <div class="form-row">
+                    <label>Reason:</label>
+                    <input type="text" name="reason" required placeholder="Brief reason for swap request" style="width: 300px;">
+                </div>
+                <div class="form-row">
+                    <button type="submit" class="button">Request Swap</button>
+                </div>
+            </form>
+        </div>
+        
+        <div class="swap-list">
+            <h3>Pending Swaps ({{pending_count}})</h3>
+            {{pending_swaps}}
+        </div>
+        
+        <div class="swap-list">
+            <h3>Approved Swaps ({{approved_count}})</h3>
+            {{approved_swaps}}
+        </div>
+        
+        <p><a href="/view" class="button">Back to Calendar</a></p>
+    </div>
+    
+    <script src="/js/forms.js"></script>
+</body>
+</html>

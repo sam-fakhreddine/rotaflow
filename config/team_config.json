@@ -9,6 +9,6 @@
   ],
   "rotation_days": ["Monday", "Wednesday", "Thursday", "Friday"],
   "mandatory_day": "Tuesday",
-  "mandatory_dates": [],
-  "company_days_off": []
+  "mandatory_dates": ["20241225", "20250101"],
+  "company_days_off": ["20241224", "20241231"]
 }

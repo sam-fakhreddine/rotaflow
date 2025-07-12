@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Login - 4x10 Schedule</title>
+    <link rel="stylesheet" href="/css/base.css">
+    <link rel="stylesheet" href="/css/forms.css">
+</head>
+<body>
+    <div class="login-container">
+        <h1>Login</h1>
+        {{error_html}}
+        <form method="post" action="/api/login">
+            <div class="form-row">
+                <label>Username:</label>
+                <input type="text" name="username" required>
+            </div>
+            <div class="form-row">
+                <label>Password:</label>
+                <input type="password" name="password" required>
+            </div>
+            <div class="form-row">
+                <button type="submit" class="button">Login</button>
+            </div>
+        </form>
+        <p style="text-align: center; margin-top: 20px; color: #666; font-size: 14px;">
+            Default: admin/admin123 or manager/manager123
+        </p>
+    </div>
+</body>
+</html>

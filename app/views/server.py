@@ -19,10 +19,14 @@ from ..auth.user_manager import UserManager
 from ..auth.auth import SessionManager
 from ..multi_tenant import TenantManager
 from ..utils.holidays import HolidayManager
+from ..services.coverage_service import CoverageService
 
 # Setup JSON logging
 logging.basicConfig(level=logging.INFO, format='%(message)s')
 logger = logging.getLogger(__name__)
+
+# Global coverage service
+coverage_service = CoverageService()
 
 
 class CalendarHandler(http.server.BaseHTTPRequestHandler):
@@ -879,6 +883,9 @@ class CalendarHandler(http.server.BaseHTTPRequestHandler):
             week_start = manager.get_week_start_date(week_num, start_date)
             oncall = manager.get_oncall_engineer(week_num)
             rotation_pattern = manager.get_rotation_pattern(week_num)
+            
+            # Calculate coverage adjustments for this week
+            coverage_adjustments = coverage_service.calculate_coverage_adjustments(manager, week_num, week_start)
 
             html += f"""
     <div class="week">
@@ -933,6 +940,8 @@ class CalendarHandler(http.server.BaseHTTPRequestHandler):
                     manager.engineers, key=lambda e: (e != oncall, e.name)
                 )
 
+
+                
                 # Check if engineer has any holidays this week
                 engineer_has_holiday_this_week = {}
                 for engineer in engineers_sorted:
@@ -945,7 +954,11 @@ class CalendarHandler(http.server.BaseHTTPRequestHandler):
                     engineer_has_holiday_this_week[engineer.name] = has_holiday
 
                 for engineer in engineers_sorted:
-                    day_off = rotation_pattern[engineer.name]
+                    # Get actual day off (may be adjusted for coverage)
+                    original_day_off = rotation_pattern[engineer.name]
+                    actual_day_off = coverage_service.get_engineer_day_off(engineer.name, week_num, original_day_off)
+                    is_coverage_adjusted = coverage_service.is_coverage_adjustment(engineer.name, week_num)
+                    
                     is_oncall = engineer == oncall
                     has_holiday_this_week = engineer_has_holiday_this_week[engineer.name]
 
@@ -1017,10 +1030,13 @@ class CalendarHandler(http.server.BaseHTTPRequestHandler):
                             status = (
                                 f"{'On-call' if is_oncall else 'Work'}{swap_status}"
                             )
-                    elif day_name == day_off and not is_oncall and not has_holiday_this_week:
-                        # Only get scheduled day off if no holiday this week
+                    elif day_name == actual_day_off and not is_oncall and not has_holiday_this_week:
+                        # Day off (possibly moved for coverage)
                         css_class = "dayoff"
-                        status = "Day Off"
+                        if is_coverage_adjusted and day_name != original_day_off:
+                            status = "Day Off (Moved)"
+                        else:
+                            status = "Day Off"
                     else:
                         css_class = "oncall" if is_oncall else "working"
                         status = "On-call" if is_oncall else "Work"
@@ -1033,7 +1049,10 @@ class CalendarHandler(http.server.BaseHTTPRequestHandler):
                         "engineer": engineer.name,
                         "date": day_date.isoformat(),
                         "css_class": css_class,
-                        "status": status
+                        "status": status,
+                        "coverage_adjusted": is_coverage_adjusted,
+                        "original_day_off": original_day_off,
+                        "actual_day_off": actual_day_off
                     }))
 
                 html += """
