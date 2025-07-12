@@ -1,0 +1,41 @@
+services:
+  # Customer 1
+  schedule-customer1:
+    build: .
+    ports:
+      - "6247:6247"
+    volumes:
+      - customer1_data:/app/data
+      - customer1_config:/app/config
+    environment:
+      - TENANT_ID=customer1
+    restart: unless-stopped
+
+  # Customer 2  
+  schedule-customer2:
+    build: .
+    ports:
+      - "6248:6247"
+    volumes:
+      - customer2_data:/app/data
+      - customer2_config:/app/config
+    environment:
+      - TENANT_ID=customer2
+    restart: unless-stopped
+
+  # Reverse proxy
+  nginx:
+    image: nginx:alpine
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf
+    depends_on:
+      - schedule-customer1
+      - schedule-customer2
+
+volumes:
+  customer1_data:
+  customer1_config:
+  customer2_data:
+  customer2_config:

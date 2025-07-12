@@ -1,0 +1,88 @@
+[tool.poetry]
+name = "schedule-manager"
+version = "1.0.0"
+description = "4x10 Work Schedule Manager with Holiday Support"
+authors = ["Schedule Manager Team"]
+readme = "README.md"
+packages = [{include = "app"}]
+
+[tool.poetry.dependencies]
+python = "^3.11"
+Flask = "^2.3.3"
+Flask-Login = "^0.6.3"
+Flask-Bcrypt = "^1.0.1"
+Werkzeug = "^2.3.7"
+holidays = "^0.34"
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^8.3.0"
+black = "^24.10.0"
+isort = "^5.13.2"
+mypy = "^1.13.0"
+flake8 = "^7.1.0"
+pre-commit = "^4.0.0"
+commitizen = "^3.29.0"
+pytest-cov = "^6.0.0"
+bandit = "^1.7.0"
+safety = "^3.0.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.black]
+line-length = 88
+target-version = ['py311']
+extend-exclude = '''
+/(
+    \.git
+  | \.mypy_cache
+  | \.pytest_cache
+  | \.venv
+  | venv
+  | build
+  | dist
+  | __pycache__
+)/
+'''
+
+[tool.isort]
+profile = "black"
+line_length = 88
+skip_glob = [
+    ".venv/*",
+    "venv/*",
+    "build/*",
+    "dist/*",
+    "__pycache__/*",
+    ".pytest_cache/*",
+    ".mypy_cache/*"
+]
+
+[tool.mypy]
+python_version = "3.11"
+warn_return_any = false
+warn_unused_configs = true
+disallow_untyped_defs = false
+no_implicit_optional = true
+check_untyped_defs = false
+namespace_packages = true
+explicit_package_bases = true
+exclude = [
+    "build/",
+    "dist/",
+    ".venv/",
+    "venv/",
+    "__pycache__/",
+    ".pytest_cache/",
+    ".mypy_cache/",
+    "node_modules/"
+]
+
+[[tool.mypy.overrides]]
+module = [
+    "holidays",
+    "flask.*",
+    "werkzeug.*"
+]
+ignore_missing_imports = true

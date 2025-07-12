@@ -1,0 +1,32 @@
+services:
+  # Test Customer 1
+  schedule-test1:
+    build: .
+    ports:
+      - "6247:6247"
+    volumes:
+      - test1_data:/app/data
+      - test1_config:/app/config
+    environment:
+      - TENANT_ID=test1
+      - PYTHONUNBUFFERED=1
+    restart: unless-stopped
+
+  # Test Customer 2  
+  schedule-test2:
+    build: .
+    ports:
+      - "6248:6247"
+    volumes:
+      - test2_data:/app/data
+      - test2_config:/app/config
+    environment:
+      - TENANT_ID=test2
+      - PYTHONUNBUFFERED=1
+    restart: unless-stopped
+
+volumes:
+  test1_data:
+  test1_config:
+  test2_data:
+  test2_config:

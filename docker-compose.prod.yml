@@ -1,0 +1,15 @@
+services:
+  schedule-manager:
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+    environment:
+      - PYTHONUNBUFFERED=1
+      - ENVIRONMENT=production
+      - SECRET_KEY=${SECRET_KEY:-change-me-in-production}
+      - SESSION_TIMEOUT=3600
+      - BCRYPT_ROUNDS=12
+    env_file:
+      - .env
