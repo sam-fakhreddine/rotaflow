@@ -1,14 +1,14 @@
 {
   "engineers": [
-    {"name": "Alex", "letter": "A", "seniority": 1, "country": "US", "state_province": "CA"},
-    {"name": "Blake", "letter": "B", "seniority": 2, "country": "US", "state_province": "NY"},
-    {"name": "Casey", "letter": "C", "seniority": 3, "country": "CA", "state_province": "ON"},
-    {"name": "Dana", "letter": "D", "seniority": 4, "country": "US", "state_province": "CA"},
-    {"name": "Evan", "letter": "E", "seniority": 5, "country": "CA", "state_province": "BC"},
-    {"name": "Fiona", "letter": "F", "seniority": 6, "country": "US", "state_province": "CA"}
+    {"name": "Alex", "letter": "A", "seniority": 1, "country": "US", "state_province": "MD"},
+    {"name": "Blake", "letter": "B", "seniority": 2, "country": "US", "state_province": "TX"},
+    {"name": "Casey", "letter": "C", "seniority": 3, "country": "CA", "state_province": "AB"},
+    {"name": "Dana", "letter": "D", "seniority": 4, "country": "US", "state_province": "TX"},
+    {"name": "Evan", "letter": "E", "seniority": 5, "country": "CA", "state_province": "AB"},
+    {"name": "Fiona", "letter": "F", "seniority": 6, "country": "US", "state_province": "TX"}
   ],
   "rotation_days": ["Monday", "Wednesday", "Thursday", "Friday"],
   "mandatory_day": "Tuesday",
-  "mandatory_dates": ["20241225", "20250101"],
-  "company_days_off": ["20241224", "20241231"]
+  "mandatory_dates": [],
+  "company_days_off": []
 }
