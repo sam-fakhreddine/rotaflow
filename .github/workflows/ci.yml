@@ -19,33 +19,33 @@ jobs:
   test:
     runs-on: ubuntu-latest
     timeout-minutes: 10
-    
+
     steps:
     - uses: actions/checkout@v4
-    
+
     - name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v3
-      
+
     - name: Set up Python
       uses: actions/setup-python@v5
       with:
         python-version: '3.13'
         cache: 'pip'
-        
+
     - name: Lint and build
       run: |
         python -m pip install --upgrade pip
         pip install black isort flake8
         black --check app/ && isort --check-only app/ && flake8 app/
         docker buildx build --cache-from type=gha --cache-to type=gha,mode=max -t schedule-manager:test --load .
-        
+
     - name: Test application
       run: |
         # Remove any existing container
         docker rm -f test-container 2>/dev/null || true
-        
+
         docker run -d -p 6247:6247 --name test-container schedule-manager:test
-        
+
         # Wait for startup with retry logic
         for i in {1..30}; do
           if curl -f http://localhost:6247/health 2>/dev/null; then
@@ -55,25 +55,25 @@ jobs:
           echo "Waiting for service... ($i/30)"
           sleep 2
         done
-        
+
         # Comprehensive validation
         HEALTH_RESPONSE=$(curl -s http://localhost:6247/health)
         echo "Health response: $HEALTH_RESPONSE"
         echo "$HEALTH_RESPONSE" | jq -e '.status == "healthy" and .checks.storage.status == "healthy" and .checks.auth.status == "healthy" and .checks.calendar.status == "healthy"'
-        
+
         # Test endpoints sequentially for better error reporting
         curl -f http://localhost:6247/login
         curl -f http://localhost:6247/calendar.ics
         curl -f http://localhost:6247/engineer/alex.ics
-        
 
-        
+
+
     - name: Cleanup
       if: always()
       run: |
         docker logs test-container || true
         docker rm -f test-container || true
-      
+
     - name: Auto-merge dependencies
       if: success() && github.event_name == 'pull_request' && (contains(github.actor, 'bot') || github.actor == 'github-actions[bot]')
       run: |

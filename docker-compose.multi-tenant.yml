@@ -11,7 +11,7 @@ services:
       - TENANT_ID=customer1
     restart: unless-stopped
 
-  # Customer 2  
+  # Customer 2
   schedule-customer2:
     build: .
     ports:

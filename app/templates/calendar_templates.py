@@ -49,10 +49,10 @@ class CalendarTemplates:
     <div class="header">
         <h1>4x10 Work Schedule</h1>
         <p>Team: {len(manager.engineers)} engineers | Starting: {start_date.strftime('%Y-%m-%d')}</p>
-        
+
         <form method="get" style="margin: 15px 0; padding: 15px; background: #f8f9fa; border-radius: 5px;">
             <label>Weeks: <input type="number" name="weeks" value="{weeks}" min="1" max="104" style="width: 60px; margin: 0 10px;"></label>
-            <label>Config: 
+            <label>Config:
                 <select name="config" style="margin: 0 10px;">
                     <option value="">Default (6 engineers)</option>
                     <option value="team_5.json">5 Engineers</option>
@@ -329,7 +329,7 @@ class CalendarTemplates:
         <a href="/calendar.ics{self._build_query_string(weeks, None, start_date)}" style="background: #007cba; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; margin: 5px;">Download iCal</a>
         <a href="/" style="background: #28a745; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; margin: 5px;">Subscription Info</a>
     </div>
-    
+
     <script>
         const params = new URLSearchParams(window.location.search);
         if (params.get('config')) {{

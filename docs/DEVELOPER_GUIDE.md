@@ -72,7 +72,7 @@ Each handler focuses on a single responsibility:
 class CalendarHandler(BaseHandler):
     def serve_calendar(self):
         # Generate iCal calendar
-    
+
     def serve_engineer_calendar(self):
         # Generate individual calendar
 ```

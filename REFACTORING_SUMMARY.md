@@ -46,7 +46,7 @@ app/
 
 #### Single Responsibility Principle (SRP)
 - **CalendarHandler**: Only handles calendar HTTP requests
-- **SwapHandler**: Only handles swap HTTP requests  
+- **SwapHandler**: Only handles swap HTTP requests
 - **AuthHandler**: Only handles authentication HTTP requests
 - **CalendarService**: Only handles calendar business logic
 - **SwapService**: Only handles swap business logic
@@ -78,7 +78,7 @@ app/
 ### Migration Path
 
 1. **Phase 1**: Extract handlers (`*_handler.py`)
-2. **Phase 2**: Extract services (`*_service.py`) 
+2. **Phase 2**: Extract services (`*_service.py`)
 3. **Phase 3**: Extract templates (`*_templates.py`)
 4. **Phase 4**: Add router and config (`router.py`, `config.py`)
 5. **Phase 5**: Create HTTP server (`http_server.py`)

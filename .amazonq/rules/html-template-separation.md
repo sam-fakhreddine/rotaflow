@@ -82,7 +82,7 @@ app/
 class TemplateRenderer:
     def __init__(self, template_path):
         self.template_path = template_path
-    
+
     def render(self, **context):
         with open(self.template_path) as f:
             template = f.read()

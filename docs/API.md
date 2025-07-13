@@ -67,7 +67,7 @@ Create, approve, or reject swap requests.
 {
   "action": "request",
   "requester": "string",
-  "target": "string", 
+  "target": "string",
   "date": "YYYY-MM-DD",
   "reason": "string"
 }

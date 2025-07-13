@@ -119,7 +119,7 @@
 class UserValidator:
     def validate_email(self, email: str) -> bool:
         return "@" in email and "." in email
-    
+
     def validate_password(self, password: str) -> bool:
         return len(password) >= 8
 
@@ -139,7 +139,7 @@ class UserService:
     def __init__(self, repository: UserRepository, validator: UserValidator):
         self._repository = repository
         self._validator = validator
-    
+
     def create_user(self, email: str, password: str) -> User:
         if not self._validator.validate_email(email):
             raise ValueError("Invalid email")
@@ -163,7 +163,7 @@ class UserManager:
 ```python
 # Bad
 if user.age > 18:  # What's special about 18?
-    
+
 # Good
 LEGAL_AGE = 18
 if user.age > LEGAL_AGE:
