@@ -164,7 +164,7 @@ def generate_analytics_html(analytics_data):
 <body>
     <div class="container">
         <h1>📊 Schedule Analytics Dashboard</h1>
-        
+
         <div class="card">
             <h2>Summary Metrics</h2>
             <div class="metrics">
@@ -186,21 +186,21 @@ def generate_analytics_html(analytics_data):
                 </div>
             </div>
         </div>
-        
+
         <div class="card">
             <h2>Days Off Distribution</h2>
             <div class="chart-container">
                 <canvas id="daysOffChart"></canvas>
             </div>
         </div>
-        
+
         <div class="card">
             <h2>On-Call Distribution</h2>
             <div class="chart-container">
                 <canvas id="oncallChart"></canvas>
             </div>
         </div>
-        
+
         <div class="card">
             <h2>Swap Patterns</h2>
             <div class="chart-container">
@@ -208,16 +208,16 @@ def generate_analytics_html(analytics_data):
             </div>
             <p>Approval Rate: {analytics_data['swap_patterns']['approval_rate']:.1f}%</p>
         </div>
-        
+
         <p><a href="/view" style="background: #007cba; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px;">Back to Calendar</a></p>
     </div>
-    
+
     <script>
         // Days Off Chart
         const daysOffData = {json.dumps(analytics_data['days_off_distribution'])};
         const engineers = Object.keys(daysOffData);
         const days = ['Monday', 'Wednesday', 'Thursday', 'Friday'];
-        
+
         new Chart(document.getElementById('daysOffChart'), {{
             type: 'bar',
             data: {{
@@ -234,7 +234,7 @@ def generate_analytics_html(analytics_data):
                 scales: {{ y: {{ beginAtZero: true }} }}
             }}
         }});
-        
+
         // On-Call Chart
         const oncallData = {json.dumps(analytics_data['oncall_distribution'])};
         new Chart(document.getElementById('oncallChart'), {{
@@ -251,7 +251,7 @@ def generate_analytics_html(analytics_data):
                 maintainAspectRatio: false
             }}
         }});
-        
+
         // Swap Chart
         const swapData = {json.dumps(analytics_data['swap_patterns']['status_breakdown'])};
         new Chart(document.getElementById('swapChart'), {{

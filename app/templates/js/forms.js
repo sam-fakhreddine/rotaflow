@@ -4,28 +4,28 @@
 function initSwapFormValidation() {
     const requesterSelect = document.querySelector('select[name="requester"]');
     const targetSelect = document.querySelector('select[name="target"]');
-    
+
     if (!requesterSelect || !targetSelect) return;
-    
+
     requesterSelect.addEventListener('change', function() {
         const selectedValue = this.value;
-        
+
         if (targetSelect.value === selectedValue) {
             targetSelect.value = '';
         }
-        
+
         Array.from(targetSelect.options).forEach(option => {
             option.disabled = option.value === selectedValue && option.value !== '';
         });
     });
-    
+
     targetSelect.addEventListener('change', function() {
         const selectedValue = this.value;
-        
+
         if (requesterSelect.value === selectedValue) {
             requesterSelect.value = '';
         }
-        
+
         Array.from(requesterSelect.options).forEach(option => {
             option.disabled = option.value === selectedValue && option.value !== '';
         });

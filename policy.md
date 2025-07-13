@@ -75,7 +75,7 @@ This policy establishes a 4-day, 10-hour workweek schedule for our 6-person engi
 ## Team Setup
 
 - **A** = Alex (Senior)
-- **B** = Blake (Mid)  
+- **B** = Blake (Mid)
 - **C** = Casey (Mid)
 - **D** = Dana (Junior)
 - **E** = Evan (Junior)
@@ -93,8 +93,8 @@ This policy establishes a 4-day, 10-hour workweek schedule for our 6-person engi
 
 ### Rotation Schedule
 
-**Weeks 1-2:** A=Fri, B=Mon, C=Thu, D=Wed, E=Mon, F=Fri  
-**Weeks 3-4:** A=Mon, B=Wed, C=Fri, D=Thu, E=Wed, F=Mon  
+**Weeks 1-2:** A=Fri, B=Mon, C=Thu, D=Wed, E=Mon, F=Fri
+**Weeks 3-4:** A=Mon, B=Wed, C=Fri, D=Thu, E=Wed, F=Mon
 **Weeks 5-6:** A=Thu, B=Fri, C=Mon, D=Fri, E=Thu, F=Wed
 
 ### Calendar View
@@ -132,7 +132,7 @@ Total: 5 6 5 6 5          Total: 6 6 5 5 5          Total: 6 6 6 5 5
 ```
         Mon  Tue  Wed  Thu  Fri
 Week 1:  4    6    5    5    5
-Week 2:  5    6    5    5    5  
+Week 2:  5    6    5    5    5
 Week 3:  5    6    5    6    5
 Week 4:  5    6    6    5    5
 Week 5:  6    6    5    5    5

@@ -9,7 +9,7 @@
 <body>
     <div class="container">
         <h1>Shift Swap Management</h1>
-        
+
         <div class="rules">
             <h4>Swap Rules:</h4>
             <ul>
@@ -20,9 +20,9 @@
                 <li>One person must be scheduled off and the other on for the swap date</li>
             </ul>
         </div>
-        
+
         {{messages}}
-        
+
         <div class="form">
             <h3>Request Shift Swap</h3>
             <form method="post" action="/api/swap">
@@ -54,20 +54,20 @@
                 </div>
             </form>
         </div>
-        
+
         <div class="swap-list">
             <h3>Pending Swaps ({{pending_count}})</h3>
             {{pending_swaps}}
         </div>
-        
+
         <div class="swap-list">
             <h3>Approved Swaps ({{approved_count}})</h3>
             {{approved_swaps}}
         </div>
-        
+
         <p><a href="/view" class="button">Back to Calendar</a></p>
     </div>
-    
+
     <script src="/js/forms.js"></script>
 </body>
 </html>

@@ -143,24 +143,24 @@ class SwapTemplates:
         document.querySelector('select[name="requester"]').addEventListener('change', function() {
             const targetSelect = document.querySelector('select[name="target"]');
             const selectedValue = this.value;
-            
+
             if (targetSelect.value === selectedValue) {
                 targetSelect.value = '';
             }
-            
+
             Array.from(targetSelect.options).forEach(option => {
                 option.disabled = option.value === selectedValue && option.value !== '';
             });
         });
-        
+
         document.querySelector('select[name="target"]').addEventListener('change', function() {
             const requesterSelect = document.querySelector('select[name="requester"]');
             const selectedValue = this.value;
-            
+
             if (requesterSelect.value === selectedValue) {
                 requesterSelect.value = '';
             }
-            
+
             Array.from(requesterSelect.options).forEach(option => {
                 option.disabled = option.value === selectedValue && option.value !== '';
             });

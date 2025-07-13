@@ -15,10 +15,10 @@ This rule establishes guidelines to minimize the number of chat interactions by 
   ```bash
   # Instead of 3 separate interactions:
   npm install && npm run build && npm test
-  
+
   # Instead of multiple git commands:
   git add . && git commit -m "feature: add new component" && git push
-  
+
   # For Python projects:
   pip install -r requirements.txt && python -m pytest && python main.py
   ```

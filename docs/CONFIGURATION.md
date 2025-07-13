@@ -77,7 +77,7 @@ Default configuration with 6 engineers is built-in.
       "engineer_name": null
     },
     {
-      "username": "manager", 
+      "username": "manager",
       "password_hash": "hashed_password",
       "role": "manager",
       "engineer_name": null
@@ -90,7 +90,7 @@ Default configuration with 6 engineers is built-in.
 ```json
 {
   "username": "alex",
-  "password_hash": "hashed_password", 
+  "password_hash": "hashed_password",
   "role": "engineer",
   "engineer_name": "Alex"
 }
@@ -105,7 +105,7 @@ Default configuration with 6 engineers is built-in.
 ### Holiday Sources
 - US Federal holidays
 - State-specific holidays
-- Canadian federal holidays  
+- Canadian federal holidays
 - Provincial holidays
 
 ### Custom Holidays
