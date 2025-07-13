@@ -76,3 +76,5 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         MERGE_METHOD: squash
         MERGE_COMMIT_MESSAGE: "chore: auto-merge dependency update"
+        MERGE_LABELS: ""
+        MERGE_REQUIRED_APPROVALS: 0
