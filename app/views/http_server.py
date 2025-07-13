@@ -18,11 +18,11 @@ class HttpRequestHandler(http.server.BaseHTTPRequestHandler):
     """HTTP request handler using router pattern"""
 
     def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
         self.calendar_handler = CalendarHandler()
         self.swap_handler = SwapHandler()
         self.auth_handler = AuthHandler()
         self.router = self._setup_routes()
+        super().__init__(*args, **kwargs)
 
     def _setup_routes(self):
         """Setup URL routes"""
