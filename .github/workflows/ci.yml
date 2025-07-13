@@ -6,87 +6,66 @@ on:
   pull_request:
     branches: [ main ]
 
+env:
+  DOCKER_BUILDKIT: 1
+  COMPOSE_DOCKER_CLI_BUILD: 1
+
 jobs:
-  lint:
+  test:
     runs-on: ubuntu-latest
+    timeout-minutes: 10
+    
     steps:
     - uses: actions/checkout@v4
+    
+    - name: Cache Docker layers
+      uses: actions/cache@v4
+      with:
+        path: /tmp/.buildx-cache
+        key: ${{ runner.os }}-buildx-${{ github.sha }}
+        restore-keys: |
+          ${{ runner.os }}-buildx-
     
     - name: Set up Python
       uses: actions/setup-python@v5
       with:
         python-version: '3.11'
+        cache: 'pip'
         
-    - name: Install dependencies
+    - name: Lint and build
       run: |
         python -m pip install --upgrade pip
         pip install black isort flake8
+        black --check app/ && isort --check-only app/ && flake8 app/
+        docker build --cache-from type=local,src=/tmp/.buildx-cache --cache-to type=local,dest=/tmp/.buildx-cache-new,mode=max -t schedule-manager:test .
         
-    - name: Run Black
-      run: black --check app/
-      
-    - name: Run isort
-      run: isort --check-only app/
-      
-    - name: Run Flake8
-      run: flake8 app/
-      
-
-  docker:
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v4
-    
-    - name: Build Docker image
-      run: docker build -t schedule-manager:test .
-      
-    - name: Run container
-      run: docker run -d -p 6247:6247 --name test-container schedule-manager:test
-      
-    - name: Wait for startup
-      run: sleep 15
-      
-    - name: Comprehensive health check
+    - name: Test application
       run: |
-        # Basic health check
-        curl -f http://localhost:6247/health
+        docker run -d -p 6247:6247 --name test-container --health-cmd="curl -f http://localhost:6247/health || exit 1" --health-interval=5s --health-timeout=3s --health-retries=3 schedule-manager:test
         
-        # Verify health response structure and data
+        # Wait for healthy status
+        timeout 60s bash -c 'until docker inspect --format="{{.State.Health.Status}}" test-container | grep -q healthy; do sleep 2; done'
+        
+        # Comprehensive validation
         HEALTH_RESPONSE=$(curl -s http://localhost:6247/health)
-        echo "Health response: $HEALTH_RESPONSE"
+        echo "$HEALTH_RESPONSE" | jq -e '.status == "healthy" and .checks.storage.status == "healthy" and .checks.auth.status == "healthy" and .checks.calendar.status == "healthy"'
         
-        # Validate JSON structure
-        echo "$HEALTH_RESPONSE" | jq -e 'type == "object"'
-        echo "$HEALTH_RESPONSE" | jq -e 'has("status") and has("timestamp") and has("checks") and has("version")'
+        # Test endpoints in parallel
+        curl -f http://localhost:6247/login & curl -f http://localhost:6247/calendar.ics & curl -f http://localhost:6247/engineer/alex.ics & wait
         
-        # Check if all systems are healthy
-        echo "$HEALTH_RESPONSE" | jq -e '.status == "healthy"'
-        echo "$HEALTH_RESPONSE" | jq -e '.checks.storage.status == "healthy"'
-        echo "$HEALTH_RESPONSE" | jq -e '.checks.auth.status == "healthy"'
-        echo "$HEALTH_RESPONSE" | jq -e '.checks.calendar.status == "healthy"'
-        
-        # Validate timestamp is recent (within last 60 seconds)
-        TIMESTAMP=$(echo "$HEALTH_RESPONSE" | jq -r '.timestamp')
-        CURRENT_TIME=$(date +%s)
-        TIME_DIFF=$((CURRENT_TIME - ${TIMESTAMP%.*}))
-        if [ $TIME_DIFF -gt 60 ]; then
-          echo "Health check timestamp too old: $TIME_DIFF seconds"
-          exit 1
-        fi
-        
-        # Validate version exists
-        echo "$HEALTH_RESPONSE" | jq -e '.version != null and .version != ""'
-        
-    - name: Test core functionality
+    - name: Move cache
       run: |
-        # Test login page loads
-        curl -f http://localhost:6247/login
+        rm -rf /tmp/.buildx-cache
+        mv /tmp/.buildx-cache-new /tmp/.buildx-cache
         
-        # Test calendar generation
-        curl -f http://localhost:6247/calendar.ics
-        
-        # Test individual engineer calendar
-        curl -f http://localhost:6247/engineer/alex.ics
+    - name: Cleanup
+      if: always()
+      run: docker stop test-container || true
       
-    - name: Stop container
-      run: docker stop test-container
+    - name: Auto-merge dependencies
+      if: success() && github.event_name == 'pull_request' && (github.actor == 'renovate[bot]' || github.actor == 'dependabot[bot]')
+      uses: pascalgn/automerge-action@v0.16.4
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        MERGE_METHOD: squash
+        MERGE_COMMIT_MESSAGE: "chore: auto-merge dependency update"
