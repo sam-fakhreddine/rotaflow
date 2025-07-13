@@ -4,10 +4,11 @@ User management system
 """
 
 import json
-import bcrypt
 import os
+from dataclasses import asdict, dataclass
 from typing import Dict, List, Optional
-from dataclasses import dataclass, asdict
+
+import bcrypt
 
 
 @dataclass

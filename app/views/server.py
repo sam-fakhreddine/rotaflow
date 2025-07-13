@@ -3,23 +3,23 @@
 Simple HTTP server to serve iCal calendar files for webcal subscriptions
 """
 
-import http.server
-import socketserver
-import os
 import datetime
-from urllib.parse import urlparse, parse_qs
-import sys
+import http.server
 import json
 import logging
+import os
+import socketserver
+import sys
+from urllib.parse import parse_qs, urlparse
 
 sys.path.append(".")
+from ..auth.auth import SessionManager
+from ..auth.user_manager import UserManager
 from ..models.rotation import RotationManager
 from ..models.swap_manager import SwapManager
-from ..auth.user_manager import UserManager
-from ..auth.auth import SessionManager
 from ..multi_tenant import TenantManager
-from ..utils.holidays import HolidayManager
 from ..services.coverage_service import CoverageService
+from ..utils.holidays import HolidayManager
 
 # Setup JSON logging
 logging.basicConfig(level=logging.INFO, format="%(message)s")

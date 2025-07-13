@@ -6,12 +6,12 @@ Clean, refactored HTTP server following SOLID principles
 import socketserver
 from urllib.parse import urlparse
 
-from ..handlers.calendar_handler import CalendarHandler
-from ..handlers.swap_handler import SwapHandler
+from ..core.config import Config
+from ..core.router import Router
 from ..handlers.auth_handler import AuthHandler
 from ..handlers.base_handler import BaseHandler
-from ..core.router import Router
-from ..core.config import Config
+from ..handlers.calendar_handler import CalendarHandler
+from ..handlers.swap_handler import SwapHandler
 
 
 class CleanHandler(BaseHandler):
@@ -90,8 +90,9 @@ class CleanHandler(BaseHandler):
 
     def _serve_index(self):
         """Index page"""
-        from ..templates.renderers.template_renderer import TemplateRenderer
         import os
+
+        from ..templates.renderers.template_renderer import TemplateRenderer
 
         template_dir = os.path.join(
             os.path.dirname(__file__), "..", "templates", "html"

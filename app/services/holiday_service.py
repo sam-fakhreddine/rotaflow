@@ -1,7 +1,8 @@
 """Holiday service following Single Responsibility Principle."""
 
 import datetime
-from typing import Set, List
+from typing import List, Set
+
 from ..utils.holidays import HolidayManager
 
 

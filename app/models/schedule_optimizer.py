@@ -4,6 +4,7 @@ Schedule optimization and validation utilities
 """
 
 from typing import Dict, List
+
 from .rotation import Engineer
 
 

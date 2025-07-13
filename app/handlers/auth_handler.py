@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
 """Authentication HTTP handlers"""
 
-from .base_handler import BaseHandler
+from urllib.parse import parse_qs, urlparse
+
 from ..services.auth_service import AuthService
 from ..templates.auth_templates import AuthTemplates
-from urllib.parse import urlparse, parse_qs
+from .base_handler import BaseHandler
 
 
 class AuthHandler(BaseHandler):

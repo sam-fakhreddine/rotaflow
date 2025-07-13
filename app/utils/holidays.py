@@ -5,7 +5,7 @@ Holiday detection based on engineer location
 
 import datetime
 import logging
-from typing import List, Set, Optional
+from typing import List, Optional, Set
 
 try:
     import holidays

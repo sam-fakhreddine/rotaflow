@@ -5,7 +5,8 @@ Simple session-based authentication
 
 import secrets
 from typing import Dict, Optional
-from .user_manager import UserManager, User
+
+from .user_manager import User, UserManager
 
 
 class SessionManager:

@@ -4,14 +4,14 @@ Refactored HTTP server following SOLID principles and best practices
 """
 
 import http.server
-import socketserver
 import os
+import socketserver
 from urllib.parse import urlparse
 
-from ..handlers.calendar_handler import CalendarHandler
-from ..handlers.swap_handler import SwapHandler
 from ..handlers.auth_handler import AuthHandler
 from ..handlers.base_handler import BaseHandler
+from ..handlers.calendar_handler import CalendarHandler
+from ..handlers.swap_handler import SwapHandler
 from ..multi_tenant import TenantManager
 
 

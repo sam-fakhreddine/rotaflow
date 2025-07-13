@@ -2,6 +2,7 @@
 """Authentication HTML templates"""
 
 import os
+
 from .renderers.template_renderer import TemplateRenderer
 
 

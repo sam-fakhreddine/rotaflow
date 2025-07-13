@@ -10,8 +10,8 @@ import argparse
 import datetime
 import json
 import os
-from typing import List, Dict
 from dataclasses import dataclass
+from typing import Dict, List
 
 
 @dataclass

@@ -2,6 +2,7 @@
 
 import datetime
 from typing import Dict, List, Tuple
+
 from ..utils.holidays import HolidayManager
 
 

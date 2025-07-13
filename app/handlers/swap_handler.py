@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
 """Swap management HTTP handlers"""
 
-from .base_handler import BaseHandler
+from urllib.parse import parse_qs, urlparse
+
 from ..services.swap_service import SwapService
 from ..templates.swap_templates import SwapTemplates
-from urllib.parse import urlparse, parse_qs
+from .base_handler import BaseHandler
 
 
 class SwapHandler(BaseHandler):

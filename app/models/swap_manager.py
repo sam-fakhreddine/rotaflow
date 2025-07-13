@@ -3,12 +3,13 @@
 Shift Swap Management for 4x10 schedules
 """
 
-import json
 import datetime
-from typing import Dict, List, Optional
-from dataclasses import dataclass, asdict
-from .rotation import RotationManager
+import json
 import sys
+from dataclasses import asdict, dataclass
+from typing import Dict, List, Optional
+
+from .rotation import RotationManager
 
 sys.path.append(".")
 

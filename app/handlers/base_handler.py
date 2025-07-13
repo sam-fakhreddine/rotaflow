@@ -4,8 +4,8 @@ import http.server
 import json
 import logging
 from abc import ABC, abstractmethod
-from urllib.parse import urlparse, parse_qs
-from typing import Dict, Any, Optional
+from typing import Any, Dict, Optional
+from urllib.parse import parse_qs, urlparse
 
 from ..auth.auth import SessionManager
 from ..multi_tenant import TenantManager

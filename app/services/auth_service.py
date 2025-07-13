@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """Authentication service"""
 
-from ..auth.user_manager import UserManager
 from ..auth.auth import SessionManager
+from ..auth.user_manager import UserManager
 
 
 class AuthService:

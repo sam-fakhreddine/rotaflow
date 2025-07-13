@@ -2,13 +2,14 @@
 """Calendar generation service"""
 
 import datetime
-import tempfile
 import os
+import tempfile
+
 from ..models.rotation import RotationManager
 from ..models.swap_manager import SwapManager
 from ..services.coverage_service import CoverageService
-from ..utils.holidays import HolidayManager
 from ..templates.calendar_templates import CalendarTemplates
+from ..utils.holidays import HolidayManager
 
 
 class CalendarService:

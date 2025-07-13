@@ -4,10 +4,11 @@ Calendar storage system using JSON
 """
 
 import json
+from dataclasses import asdict, dataclass
 
 # datetime imported where needed
 from typing import Dict, List
-from dataclasses import dataclass, asdict
+
 from .rotation import RotationManager
 from .swap_manager import SwapManager
 

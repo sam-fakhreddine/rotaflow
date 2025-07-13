@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
 """Calendar-specific HTTP handlers"""
 
-from .base_handler import BaseHandler
-from ..services.calendar_service import CalendarService
-
 # RotationManager imported in methods where needed
-from urllib.parse import urlparse, parse_qs
+from urllib.parse import parse_qs, urlparse
+
+from ..services.calendar_service import CalendarService
+from .base_handler import BaseHandler
 
 
 class CalendarHandler(BaseHandler):
