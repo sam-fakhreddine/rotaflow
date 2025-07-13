@@ -3,7 +3,8 @@
 import http.server
 import json
 import logging
-from abc import ABC, abstractmethod
+
+# Removed ABC import - using composition pattern instead
 from typing import Any, Dict, Optional
 from urllib.parse import parse_qs, urlparse
 
@@ -13,7 +14,7 @@ from ..multi_tenant import TenantManager
 # Constants imported inline to avoid star import
 
 
-class BaseHandler(http.server.BaseHTTPRequestHandler, ABC):
+class BaseHandler:
     """Base handler providing common functionality."""
 
     def __init__(self, *args, **kwargs):
@@ -90,7 +91,6 @@ class BaseHandler(http.server.BaseHTTPRequestHandler, ABC):
         log_data = {"event": event_type, **data}
         self.logger.info(json.dumps(log_data))
 
-    @abstractmethod
     def handle_request(self):
-        """Handle the specific request - to be implemented by subclasses."""
-        pass
+        """Default request handler - can be overridden by subclasses."""
+        self.send_error(501, "Not implemented")
