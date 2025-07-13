@@ -1,5 +1,5 @@
 Flask==2.3.3
 Flask-Login==0.6.3
 Flask-Bcrypt==1.0.1
-Werkzeug==2.3.7
+Werkzeug==3.0.6
 holidays==0.34
