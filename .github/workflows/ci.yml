@@ -34,22 +34,20 @@ jobs:
 
   docker:
     runs-on: ubuntu-latest
-    services:
-      schedule-manager:
-        image: schedule-manager:test
-        ports:
-          - 6247:6247
-        options: --health-cmd="curl -f http://localhost:6247/health" --health-interval=10s --health-timeout=5s --health-retries=3
-    
     steps:
     - uses: actions/checkout@v4
     
     - name: Build Docker image
-      run: |
-        docker build -t schedule-manager:test .
-        
-    - name: Wait for service
-      run: sleep 10
+      run: docker build -t schedule-manager:test .
+      
+    - name: Run container
+      run: docker run -d -p 6247:6247 --name test-container schedule-manager:test
+      
+    - name: Wait for startup
+      run: sleep 15
       
     - name: Health check
       run: curl -f http://localhost:6247/health
+      
+    - name: Stop container
+      run: docker stop test-container
