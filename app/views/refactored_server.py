@@ -17,7 +17,7 @@ from ..multi_tenant import TenantManager
 
 class MainHandler(BaseHandler):
     """Main HTTP request handler that delegates to specialized handlers"""
-    
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.calendar_handler = CalendarHandler()
@@ -28,7 +28,7 @@ class MainHandler(BaseHandler):
     def do_GET(self):
         """Handle GET requests"""
         parsed_path = urlparse(self.path)
-        
+
         # Route to appropriate handler
         if parsed_path.path == "/calendar.ics":
             self._delegate_to_handler(self.calendar_handler.serve_calendar)
@@ -52,7 +52,7 @@ class MainHandler(BaseHandler):
     def do_POST(self):
         """Handle POST requests"""
         parsed_path = urlparse(self.path)
-        
+
         if parsed_path.path == "/api/swap":
             self._delegate_to_handler(self.swap_handler.handle_swap_request)
         elif parsed_path.path == "/api/login":
@@ -72,7 +72,7 @@ class MainHandler(BaseHandler):
         handler.send_header = self.send_header
         handler.send_error = self.send_error
         handler.end_headers = self.end_headers
-        
+
         # Execute handler method
         handler_method()
 
@@ -120,7 +120,7 @@ class MainHandler(BaseHandler):
 </body>
 </html>
         """
-        
+
         self.send_response(200)
         self.send_header("Content-Type", "text/html")
         self.end_headers()

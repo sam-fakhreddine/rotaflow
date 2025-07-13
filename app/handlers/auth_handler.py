@@ -17,9 +17,9 @@ class AuthHandler(BaseHandler):
         """Serve login page"""
         query_params = parse_qs(urlparse(self.path).query)
         error_msg = query_params.get("error", [""])[0]
-        
+
         html = self.templates.render_login_page(error_msg)
-        
+
         self.send_response(200)
         self.send_header("Content-Type", "text/html")
         self.end_headers()
@@ -37,7 +37,9 @@ class AuthHandler(BaseHandler):
             if session_id:
                 self.send_response(302)
                 self.send_header("Location", "/")
-                self.send_header("Set-Cookie", f"session={session_id}; Path=/; HttpOnly")
+                self.send_header(
+                    "Set-Cookie", f"session={session_id}; Path=/; HttpOnly"
+                )
                 self.end_headers()
             else:
                 self.send_response(302)
@@ -55,13 +57,18 @@ class AuthHandler(BaseHandler):
 
         self.send_response(302)
         self.send_header("Location", "/login")
-        self.send_header("Set-Cookie", "session=; Path=/; HttpOnly; Expires=Thu, 01 Jan 1970 00:00:00 GMT")
+        self.send_header(
+            "Set-Cookie",
+            "session=; Path=/; HttpOnly; Expires=Thu, 01 Jan 1970 00:00:00 GMT",
+        )
         self.end_headers()
 
     def get_current_user(self):
         """Get current user from session"""
         session_id = self._get_session_id()
-        return self.auth_service.get_user_from_session(session_id) if session_id else None
+        return (
+            self.auth_service.get_user_from_session(session_id) if session_id else None
+        )
 
     def require_auth(self, required_role=None):
         """Check authentication and authorization"""

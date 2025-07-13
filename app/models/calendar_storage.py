@@ -4,7 +4,8 @@ Calendar storage system using JSON
 """
 
 import json
-import datetime
+
+# datetime imported where needed
 from typing import Dict, List
 from dataclasses import dataclass, asdict
 from .rotation import RotationManager

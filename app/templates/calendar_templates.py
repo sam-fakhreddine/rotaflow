@@ -20,13 +20,17 @@ class CalendarTemplates:
 
         html = self._render_header(manager, weeks, start_date)
         html += self._render_legend()
-        
+
         for week_num in range(weeks):
             html += self._render_week(
-                manager, week_num, start_date, coverage_service, 
-                swap_manager, holiday_manager
+                manager,
+                week_num,
+                start_date,
+                coverage_service,
+                swap_manager,
+                holiday_manager,
             )
-        
+
         html += self._render_footer(weeks, start_date)
         return html
 
@@ -74,110 +78,187 @@ class CalendarTemplates:
     </div>
 """
 
-    def _render_week(self, manager, week_num, start_date, coverage_service, swap_manager, holiday_manager):
+    def _render_week(
+        self,
+        manager,
+        week_num,
+        start_date,
+        coverage_service,
+        swap_manager,
+        holiday_manager,
+    ):
         """Render a single week"""
         week_start = manager.get_week_start_date(week_num, start_date)
         oncall = manager.get_oncall_engineer(week_num)
         rotation_pattern = manager.get_rotation_pattern(week_num)
-        coverage_adjustments = coverage_service.calculate_coverage_adjustments(manager, week_num, week_start)
+        coverage_adjustments = coverage_service.calculate_coverage_adjustments(
+            manager, week_num, week_start
+        )
 
         html = f"""
     <div class="week">
         <div class="week-header">Week {week_num + 1} - {week_start.strftime('%B %d, %Y')} ({oncall.letter}* on-call)</div>
         <div class="days">
 """
-        
+
         for day_name in ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"]:
             html += self._render_day(
-                day_name, week_start, manager, oncall, rotation_pattern,
-                coverage_service, swap_manager, holiday_manager, week_num
+                day_name,
+                week_start,
+                manager,
+                oncall,
+                rotation_pattern,
+                coverage_service,
+                swap_manager,
+                holiday_manager,
+                week_num,
             )
-        
+
         html += """
         </div>
     </div>
 """
         return html
 
-    def _render_day(self, day_name, week_start, manager, oncall, rotation_pattern, 
-                   coverage_service, swap_manager, holiday_manager, week_num):
+    def _render_day(
+        self,
+        day_name,
+        week_start,
+        manager,
+        oncall,
+        rotation_pattern,
+        coverage_service,
+        swap_manager,
+        holiday_manager,
+        week_num,
+    ):
         """Render a single day"""
-        day_offset = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"].index(day_name)
+        day_offset = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"].index(
+            day_name
+        )
         day_date = week_start + datetime.timedelta(days=day_offset)
-        
+
         # Get holiday info
-        holiday_names = self._get_holiday_names(day_date, manager.engineers, holiday_manager)
-        holiday_display = f"<br><small style='color: #9932cc; font-weight: bold;'>{', '.join(sorted(holiday_names))}</small>" if holiday_names else ""
-        
+        holiday_names = self._get_holiday_names(
+            day_date, manager.engineers, holiday_manager
+        )
+        holiday_display = (
+            f"<br><small style='color: #9932cc; font-weight: bold;'>{', '.join(sorted(holiday_names))}</small>"
+            if holiday_names
+            else ""
+        )
+
         html = f"""
             <div class="day">
                 <div class="day-header">{day_name}<br><small>{day_date.strftime('%m/%d')}</small>{holiday_display}</div>
                 <div class="engineers">
 """
-        
+
         # Get swaps for this date
         swaps_for_date = swap_manager.get_swaps_for_date(day_date)
-        
+
         # Sort engineers (on-call first)
-        engineers_sorted = sorted(manager.engineers, key=lambda e: (e != oncall, e.name))
-        
+        engineers_sorted = sorted(
+            manager.engineers, key=lambda e: (e != oncall, e.name)
+        )
+
         for engineer in engineers_sorted:
             html += self._render_engineer_status(
-                engineer, day_name, day_date, oncall, rotation_pattern,
-                coverage_service, swaps_for_date, holiday_manager, week_num
+                engineer,
+                day_name,
+                day_date,
+                oncall,
+                rotation_pattern,
+                coverage_service,
+                swaps_for_date,
+                holiday_manager,
+                week_num,
             )
-        
+
         html += """
                 </div>
             </div>
 """
         return html
 
-    def _render_engineer_status(self, engineer, day_name, day_date, oncall, rotation_pattern,
-                               coverage_service, swaps_for_date, holiday_manager, week_num):
+    def _render_engineer_status(
+        self,
+        engineer,
+        day_name,
+        day_date,
+        oncall,
+        rotation_pattern,
+        coverage_service,
+        swaps_for_date,
+        holiday_manager,
+        week_num,
+    ):
         """Render individual engineer status"""
         original_day_off = rotation_pattern[engineer.name]
-        actual_day_off = coverage_service.get_engineer_day_off(engineer.name, week_num, original_day_off)
-        is_coverage_adjusted = coverage_service.is_coverage_adjustment(engineer.name, week_num)
+        actual_day_off = coverage_service.get_engineer_day_off(
+            engineer.name, week_num, original_day_off
+        )
+        is_coverage_adjusted = coverage_service.is_coverage_adjustment(
+            engineer.name, week_num
+        )
         is_oncall = engineer == oncall
-        
+
         # Check for holidays and swaps
-        is_engineer_holiday = (not is_oncall and 
-                             holiday_manager.is_holiday(day_date, engineer.country, engineer.state_province))
-        
-        swap_status = self._get_swap_status(engineer, day_name, swaps_for_date, rotation_pattern)
-        
+        is_engineer_holiday = not is_oncall and holiday_manager.is_holiday(
+            day_date, engineer.country, engineer.state_province
+        )
+
+        swap_status = self._get_swap_status(
+            engineer, day_name, swaps_for_date, rotation_pattern
+        )
+
         # Determine CSS class and status text
         css_class, status = self._determine_status(
-            day_name, actual_day_off, original_day_off, is_oncall, 
-            is_engineer_holiday, is_coverage_adjusted, swap_status
+            day_name,
+            actual_day_off,
+            original_day_off,
+            is_oncall,
+            is_engineer_holiday,
+            is_coverage_adjusted,
+            swap_status,
         )
-        
+
         # Log status for debugging
-        logger.info(json.dumps({
-            "event": "engineer_status",
-            "engineer": engineer.name,
-            "date": day_date.isoformat(),
-            "css_class": css_class,
-            "status": status,
-            "coverage_adjusted": is_coverage_adjusted,
-            "original_day_off": original_day_off,
-            "actual_day_off": actual_day_off
-        }))
-        
+        logger.info(
+            json.dumps(
+                {
+                    "event": "engineer_status",
+                    "engineer": engineer.name,
+                    "date": day_date.isoformat(),
+                    "css_class": css_class,
+                    "status": status,
+                    "coverage_adjusted": is_coverage_adjusted,
+                    "original_day_off": original_day_off,
+                    "actual_day_off": actual_day_off,
+                }
+            )
+        )
+
         return f'<div class="engineer {css_class}">{engineer.name} ({engineer.letter}) - {status}</div>'
 
     def _get_holiday_names(self, day_date, engineers, holiday_manager):
         """Get holiday names for a date"""
         holiday_names = set()
         for engineer in engineers:
-            if holiday_manager.is_holiday(day_date, engineer.country, engineer.state_province):
+            if holiday_manager.is_holiday(
+                day_date, engineer.country, engineer.state_province
+            ):
                 try:
                     import holidays
+
                     if engineer.country == "US":
-                        country_holidays = holidays.US(state=engineer.state_province, years=day_date.year)
+                        country_holidays = holidays.US(
+                            state=engineer.state_province, years=day_date.year
+                        )
                     elif engineer.country == "CA":
-                        country_holidays = holidays.Canada(state=engineer.state_province, years=day_date.year)
+                        country_holidays = holidays.Canada(
+                            state=engineer.state_province, years=day_date.year
+                        )
                     else:
                         continue
                     if day_date in country_holidays:
@@ -205,8 +286,16 @@ class CalendarTemplates:
                             return " (Swapped - Off)"
         return ""
 
-    def _determine_status(self, day_name, actual_day_off, original_day_off, is_oncall, 
-                         is_engineer_holiday, is_coverage_adjusted, swap_status):
+    def _determine_status(
+        self,
+        day_name,
+        actual_day_off,
+        original_day_off,
+        is_oncall,
+        is_engineer_holiday,
+        is_coverage_adjusted,
+        swap_status,
+    ):
         """Determine CSS class and status text"""
         if is_engineer_holiday:
             return "holiday", "Stat Holiday"

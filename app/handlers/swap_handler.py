@@ -36,7 +36,7 @@ class SwapHandler(BaseHandler):
         try:
             form_data = self._parse_form_data()
             action = form_data.get("action", [""])[0]
-            
+
             if action == "request":
                 result = self.swap_service.create_swap_request(form_data)
             elif action == "approve":

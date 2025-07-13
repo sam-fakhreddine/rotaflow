@@ -8,31 +8,34 @@ from .renderers.template_renderer import TemplateRenderer
 
 class SwapTemplates:
     def __init__(self):
-        template_dir = os.path.join(os.path.dirname(__file__), 'html')
+        template_dir = os.path.join(os.path.dirname(__file__), "html")
         self.renderer = TemplateRenderer(template_dir)
-    
+
     def render_swap_page(self, data, error_msg="", success_msg=""):
         """Render swap management page"""
         pending_swaps = data["pending_swaps"]
         approved_swaps = data["approved_swaps"]
         available_users = data["available_users"]
-        
-        user_options = "".join([f'<option value="{user}">{user}</option>' for user in available_users])
-        
+
+        user_options = "".join(
+            [f'<option value="{user}">{user}</option>' for user in available_users]
+        )
+
         messages = ""
         if error_msg:
             messages += f'<div class="error">{error_msg}</div>'
         if success_msg:
             messages += f'<div class="success">{success_msg}</div>'
-        
-        return self.renderer.render('swaps.html',
+
+        return self.renderer.render(
+            "swaps.html",
             messages=messages,
             user_options=user_options,
-            today=datetime.date.today().strftime('%Y-%m-%d'),
+            today=datetime.date.today().strftime("%Y-%m-%d"),
             pending_count=len(pending_swaps),
             approved_count=len(approved_swaps),
             pending_swaps=self._render_swaps(pending_swaps, show_actions=True),
-            approved_swaps=self._render_swaps(approved_swaps, show_actions=False)
+            approved_swaps=self._render_swaps(approved_swaps, show_actions=False),
         )
 
     def _render_rules(self):
@@ -128,7 +131,7 @@ class SwapTemplates:
         else:  # success
             bg_color = "#d4edda"
             text_color = "#155724"
-        
+
         return f'<div style="background: {bg_color}; color: {text_color}; padding: 10px; border-radius: 5px; margin: 10px 0;">{message}</div>'
 
     def _render_javascript(self):

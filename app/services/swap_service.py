@@ -15,7 +15,9 @@ class SwapService:
         return {
             "pending_swaps": self.swap_manager.get_pending_swaps(),
             "approved_swaps": self.swap_manager.get_approved_swaps(),
-            "available_users": self.swap_manager.get_available_users(self.rotation_manager)
+            "available_users": self.swap_manager.get_available_users(
+                self.rotation_manager
+            ),
         }
 
     def create_swap_request(self, form_data):
@@ -38,9 +40,9 @@ class SwapService:
         """Approve a swap request"""
         swap_id = form_data.get("swap_id", [""])[0]
         approver = form_data.get("approver", [""])[0]
-        
+
         success = self.swap_manager.approve_swap(swap_id, approver)
-        
+
         if success:
             return {"success": True, "message": "Swap approved successfully"}
         else:
@@ -50,9 +52,9 @@ class SwapService:
         """Reject a swap request"""
         swap_id = form_data.get("swap_id", [""])[0]
         approver = form_data.get("approver", [""])[0]
-        
+
         success = self.swap_manager.reject_swap(swap_id, approver)
-        
+
         if success:
             return {"success": True, "message": "Swap rejected successfully"}
         else:

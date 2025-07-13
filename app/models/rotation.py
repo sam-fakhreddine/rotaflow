@@ -10,7 +10,7 @@ import argparse
 import datetime
 import json
 import os
-from typing import List, Dict, Tuple
+from typing import List, Dict
 from dataclasses import dataclass
 
 
@@ -114,7 +114,7 @@ class RotationManager:
 
         for week in range(cycle_length):
             pattern = {}
-            day_assignments = {day: [] for day in self.rotation_days}
+            # day_assignments = {day: [] for day in self.rotation_days}  # unused
 
             # First pass: ensure exactly 1 person off per day (minimum coverage)
             used_engineers = set()

@@ -22,7 +22,7 @@ from ..utils.holidays import HolidayManager
 from ..services.coverage_service import CoverageService
 
 # Setup JSON logging
-logging.basicConfig(level=logging.INFO, format='%(message)s')
+logging.basicConfig(level=logging.INFO, format="%(message)s")
 logger = logging.getLogger(__name__)
 
 # Global coverage service
@@ -883,9 +883,11 @@ class CalendarHandler(http.server.BaseHTTPRequestHandler):
             week_start = manager.get_week_start_date(week_num, start_date)
             oncall = manager.get_oncall_engineer(week_num)
             rotation_pattern = manager.get_rotation_pattern(week_num)
-            
+
             # Calculate coverage adjustments for this week
-            coverage_adjustments = coverage_service.calculate_coverage_adjustments(manager, week_num, week_start)
+            coverage_adjustments = coverage_service.calculate_coverage_adjustments(
+                manager, week_num, week_start
+            )
 
             html += f"""
     <div class="week">
@@ -903,13 +905,20 @@ class CalendarHandler(http.server.BaseHTTPRequestHandler):
                 # Get holiday names for this date (check all locations)
                 holiday_names = set()
                 for engineer in manager.engineers:
-                    if HolidayManager.is_holiday(day_date, engineer.country, engineer.state_province):
+                    if HolidayManager.is_holiday(
+                        day_date, engineer.country, engineer.state_province
+                    ):
                         try:
                             import holidays
+
                             if engineer.country == "US":
-                                country_holidays = holidays.US(state=engineer.state_province, years=day_date.year)
+                                country_holidays = holidays.US(
+                                    state=engineer.state_province, years=day_date.year
+                                )
                             elif engineer.country == "CA":
-                                country_holidays = holidays.Canada(state=engineer.state_province, years=day_date.year)
+                                country_holidays = holidays.Canada(
+                                    state=engineer.state_province, years=day_date.year
+                                )
                             else:
                                 continue
                             if day_date in country_holidays:
@@ -918,7 +927,11 @@ class CalendarHandler(http.server.BaseHTTPRequestHandler):
                             pass
 
                 holiday_text = ", ".join(sorted(holiday_names)) if holiday_names else ""
-                holiday_display = f"<br><small style='color: #9932cc; font-weight: bold;'>{holiday_text}</small>" if holiday_names else ""
+                holiday_display = (
+                    f"<br><small style='color: #9932cc; font-weight: bold;'>{holiday_text}</small>"
+                    if holiday_names
+                    else ""
+                )
 
                 html += f"""
             <div class="day">
@@ -940,15 +953,15 @@ class CalendarHandler(http.server.BaseHTTPRequestHandler):
                     manager.engineers, key=lambda e: (e != oncall, e.name)
                 )
 
-
-                
                 # Check if engineer has any holidays this week
                 engineer_has_holiday_this_week = {}
                 for engineer in engineers_sorted:
                     has_holiday = False
                     for day_offset in range(5):  # Mon-Fri
                         check_date = week_start + datetime.timedelta(days=day_offset)
-                        if HolidayManager.is_holiday(check_date, engineer.country, engineer.state_province):
+                        if HolidayManager.is_holiday(
+                            check_date, engineer.country, engineer.state_province
+                        ):
                             has_holiday = True
                             break
                     engineer_has_holiday_this_week[engineer.name] = has_holiday
@@ -956,11 +969,17 @@ class CalendarHandler(http.server.BaseHTTPRequestHandler):
                 for engineer in engineers_sorted:
                     # Get actual day off (may be adjusted for coverage)
                     original_day_off = rotation_pattern[engineer.name]
-                    actual_day_off = coverage_service.get_engineer_day_off(engineer.name, week_num, original_day_off)
-                    is_coverage_adjusted = coverage_service.is_coverage_adjustment(engineer.name, week_num)
-                    
+                    actual_day_off = coverage_service.get_engineer_day_off(
+                        engineer.name, week_num, original_day_off
+                    )
+                    is_coverage_adjusted = coverage_service.is_coverage_adjustment(
+                        engineer.name, week_num
+                    )
+
                     is_oncall = engineer == oncall
-                    has_holiday_this_week = engineer_has_holiday_this_week[engineer.name]
+                    has_holiday_this_week = engineer_has_holiday_this_week[
+                        engineer.name
+                    ]
 
                     # Check if this engineer is affected by a swap on this date
                     swap_status = ""
@@ -999,20 +1018,25 @@ class CalendarHandler(http.server.BaseHTTPRequestHandler):
                             break
 
                     # Check if this is a holiday for this specific engineer (but not if on-call)
-                    is_engineer_holiday = (not is_oncall and 
-                                         HolidayManager.is_holiday(day_date, engineer.country, engineer.state_province))
-                    
+                    is_engineer_holiday = not is_oncall and HolidayManager.is_holiday(
+                        day_date, engineer.country, engineer.state_province
+                    )
+
                     # Log holiday check
-                    logger.info(json.dumps({
-                        "event": "holiday_check",
-                        "engineer": engineer.name,
-                        "date": day_date.isoformat(),
-                        "country": engineer.country,
-                        "state_province": engineer.state_province,
-                        "is_holiday": is_engineer_holiday,
-                        "has_holiday_this_week": has_holiday_this_week
-                    }))
-                    
+                    logger.info(
+                        json.dumps(
+                            {
+                                "event": "holiday_check",
+                                "engineer": engineer.name,
+                                "date": day_date.isoformat(),
+                                "country": engineer.country,
+                                "state_province": engineer.state_province,
+                                "is_holiday": is_engineer_holiday,
+                                "has_holiday_this_week": has_holiday_this_week,
+                            }
+                        )
+                    )
+
                     if is_engineer_holiday:
                         css_class = "holiday"
                         status = "Stat Holiday"
@@ -1030,7 +1054,11 @@ class CalendarHandler(http.server.BaseHTTPRequestHandler):
                             status = (
                                 f"{'On-call' if is_oncall else 'Work'}{swap_status}"
                             )
-                    elif day_name == actual_day_off and not is_oncall and not has_holiday_this_week:
+                    elif (
+                        day_name == actual_day_off
+                        and not is_oncall
+                        and not has_holiday_this_week
+                    ):
                         # Day off (possibly moved for coverage)
                         css_class = "dayoff"
                         if is_coverage_adjusted and day_name != original_day_off:
@@ -1042,18 +1070,22 @@ class CalendarHandler(http.server.BaseHTTPRequestHandler):
                         status = "On-call" if is_oncall else "Work"
 
                     html += f'<div class="engineer {css_class}">{engineer.name} ({engineer.letter}) - {status}</div>'
-                    
+
                     # Log final status
-                    logger.info(json.dumps({
-                        "event": "engineer_status",
-                        "engineer": engineer.name,
-                        "date": day_date.isoformat(),
-                        "css_class": css_class,
-                        "status": status,
-                        "coverage_adjusted": is_coverage_adjusted,
-                        "original_day_off": original_day_off,
-                        "actual_day_off": actual_day_off
-                    }))
+                    logger.info(
+                        json.dumps(
+                            {
+                                "event": "engineer_status",
+                                "engineer": engineer.name,
+                                "date": day_date.isoformat(),
+                                "css_class": css_class,
+                                "status": status,
+                                "coverage_adjusted": is_coverage_adjusted,
+                                "original_day_off": original_day_off,
+                                "actual_day_off": actual_day_off,
+                            }
+                        )
+                    )
 
                 html += """
                 </div>
