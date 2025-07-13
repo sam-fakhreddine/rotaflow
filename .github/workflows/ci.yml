@@ -34,19 +34,22 @@ jobs:
 
   docker:
     runs-on: ubuntu-latest
+    services:
+      schedule-manager:
+        image: schedule-manager:test
+        ports:
+          - 6247:6247
+        options: --health-cmd="curl -f http://localhost:6247/health" --health-interval=10s --health-timeout=5s --health-retries=3
+    
     steps:
     - uses: actions/checkout@v4
     
-    - name: Build Docker images
-      run: docker compose -f docker-compose.test.yml build
-      
-    - name: Start containers
-      run: docker compose -f docker-compose.test.yml up -d
-      
-    - name: Check containers are running
+    - name: Build Docker image
       run: |
-        docker compose -f docker-compose.test.yml ps
-        docker compose -f docker-compose.test.yml logs
+        docker build -t schedule-manager:test .
         
-    - name: Stop containers
-      run: docker compose -f docker-compose.test.yml down
+    - name: Wait for service
+      run: sleep 10
+      
+    - name: Health check
+      run: curl -f http://localhost:6247/health
