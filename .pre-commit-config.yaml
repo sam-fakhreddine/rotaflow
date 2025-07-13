@@ -14,3 +14,11 @@ repos:
     hooks:
       - id: isort
         args: [--profile=black, --line-length=88]
+  - repo: local
+    hooks:
+      - id: docker-health-check
+        name: Docker Health Check
+        entry: scripts/docker-health-check.sh
+        language: script
+        pass_filenames: false
+        stages: [pre-push]
