@@ -85,8 +85,20 @@ class CleanHandler(BaseHandler):
         handler_method()
 
     def _serve_health_check(self):
-        """Health check endpoint"""
-        self._send_json_response({"status": "healthy"})
+        """Comprehensive health check endpoint"""
+        from ..handlers.health_handler import HealthHandler
+
+        health_handler = HealthHandler()
+        # Copy request context
+        health_handler.path = self.path
+        health_handler.headers = self.headers
+        health_handler.rfile = self.rfile
+        health_handler.wfile = self.wfile
+        health_handler.send_response = self.send_response
+        health_handler.send_header = self.send_header
+        health_handler.end_headers = self.end_headers
+
+        health_handler.handle_request()
 
     def _serve_index(self):
         """Index page"""
