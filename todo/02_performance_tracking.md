@@ -46,7 +46,7 @@ Implement data-driven performance tracking system to monitor 4x10 policy success
 - `data/performance/` - Performance data storage
 
 ## Files to Modify
-- `app/views/server.py` - Add performance dashboard routes
+- `app/views/http_server.py` - Add performance dashboard routes
 - `config/team_config.json` - Add performance thresholds
 
 ## Success Criteria

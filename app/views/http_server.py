@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Clean, refactored HTTP server following SOLID principles
+HTTP server implementation following SOLID principles
 """
 
 import http.server
@@ -14,8 +14,8 @@ from ..handlers.calendar_handler import CalendarHandler
 from ..handlers.swap_handler import SwapHandler
 
 
-class CleanHandler(http.server.BaseHTTPRequestHandler):
-    """Clean HTTP handler using router pattern"""
+class HttpRequestHandler(http.server.BaseHTTPRequestHandler):
+    """HTTP request handler using router pattern"""
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -191,11 +191,11 @@ class CleanHandler(http.server.BaseHTTPRequestHandler):
 
 
 def main():
-    """Start the clean server"""
+    """Start the HTTP server"""
     port = Config.get_port()
 
-    with socketserver.TCPServer(("", port), CleanHandler) as httpd:
-        print(f"Clean server running at http://localhost:{port}")
+    with socketserver.TCPServer(("", port), HttpRequestHandler) as httpd:
+        print(f"Schedule Manager server running at http://localhost:{port}")
         httpd.serve_forever()
 
 

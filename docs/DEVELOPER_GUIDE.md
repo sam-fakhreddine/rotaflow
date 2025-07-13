@@ -31,7 +31,7 @@ app/
 ```bash
 git clone <repository>
 cd schedule_manager
-python -m app.views.clean_server
+python main.py
 ```
 
 ### Project Structure
@@ -128,7 +128,7 @@ class NewService:
 
 ### 4. Add Routes
 ```python
-# app/views/clean_server.py
+# app/views/http_server.py
 router.get(r"^/new$", self.new_handler.handle_request)
 ```
 

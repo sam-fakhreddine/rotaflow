@@ -44,7 +44,7 @@ Implement advanced policy enforcement features for schedule management complianc
 
 ## Files to Modify
 - `app/models/swap_manager.py` - Add notice period validation
-- `app/views/server.py` - Add policy enforcement interfaces
+- `app/views/http_server.py` - Add policy enforcement interfaces
 - `config/team_config.json` - Add policy configuration
 
 ## Success Criteria

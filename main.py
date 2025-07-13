@@ -8,7 +8,7 @@ import sys
 
 sys.path.append(os.path.dirname(__file__))
 
-from app.views.server import main
+from app.views.http_server import main
 
 if __name__ == "__main__":
     main()

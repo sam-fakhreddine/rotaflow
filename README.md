@@ -17,7 +17,7 @@ A web-based schedule management system for 4-day work weeks with swap functional
 ### Local Development
 ```bash
 cd schedule_manager
-python -m app.views.clean_server
+python main.py
 ```
 
 ### Docker

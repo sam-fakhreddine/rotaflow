@@ -39,8 +39,7 @@ app/
 │   └── router.py         # URL routing
 └── views/
     ├── server.py         # Original monolith
-    ├── refactored_server.py # Intermediate refactor
-    └── clean_server.py   # Final clean version
+    └── http_server.py    # Main HTTP server
 ```
 
 ### Applied Principles
@@ -82,16 +81,13 @@ app/
 2. **Phase 2**: Extract services (`*_service.py`) 
 3. **Phase 3**: Extract templates (`*_templates.py`)
 4. **Phase 4**: Add router and config (`router.py`, `config.py`)
-5. **Phase 5**: Create clean server (`clean_server.py`)
+5. **Phase 5**: Create HTTP server (`http_server.py`)
 
 ### Usage
 
 ```bash
-# Run the clean refactored server
-python -m app.views.clean_server
-
-# Or run the original (for comparison)
-python -m app.views.server
+# Run the server
+python main.py
 ```
 
 ## Benefits Achieved

@@ -47,7 +47,7 @@ Implement comprehensive reporting and analytics system for policy monitoring and
 
 ## Files to Modify
 - `app/views/analytics.py` - Enhance existing analytics
-- `app/views/server.py` - Add reporting routes
+- `app/views/http_server.py` - Add reporting routes
 - `config/team_config.json` - Add reporting configuration
 
 ## Success Criteria

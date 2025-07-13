@@ -40,7 +40,7 @@ Implement PTO (Paid Time Off) management system that integrates with the 4x10 sc
 ## Files to Modify
 - `app/models/` - New PTO manager class
 - `app/models/rotation.py` - Update schedule generation
-- `app/views/server.py` - Add PTO management endpoints
+- `app/views/http_server.py` - Add PTO management endpoints
 - `config/team_config.json` - Add holiday configuration
 
 ## Success Criteria

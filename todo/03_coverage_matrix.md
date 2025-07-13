@@ -44,7 +44,7 @@ Implement real-time coverage monitoring and gap identification system.
 
 ## Files to Modify
 - `app/models/rotation.py` - Add coverage calculation methods
-- `app/views/server.py` - Add coverage monitoring routes
+- `app/views/http_server.py` - Add coverage monitoring routes
 - `app/models/swap_manager.py` - Integrate coverage checks
 
 ## Success Criteria
